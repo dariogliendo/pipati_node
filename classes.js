@@ -1,6 +1,7 @@
 import boxen from 'boxen';
 import { GlobalKeyboardListener } from 'node-global-key-listener';
 import methods from './methods.js';
+import chalk from 'chalk'
 
 
 class Player {
@@ -48,8 +49,11 @@ export class Game {
       const { player, action } = methods.captureControls(e.name);
       if (player && action) this.play(player, action)
       if (this.isPlayed()) {
-        console.log(this.getResult())
-        // methods.disableAlternativeBuffer()
+        console.log(boxen(this.getResult(), {
+          width: 70,
+          borderStyle: 'none',
+          textAlignment: 'center'
+        }))
         this.listener.kill()
       }
     })
@@ -81,17 +85,17 @@ export class Game {
 
   getResult() {
     if (this.player1.action == this.player2.action) {
-      return 'Empate'
+      return chalk.yellow('Empate')
     }
     if (this.player1.action == 'Piedra' && this.player2.action == 'Tijera') {
-      return 'Gana ' + this.player1.name
+      return chalk[this.player1.color]('Gana ' + this.player1.name)
     }
     if (this.player1.action == 'Papel' && this.player2.action == 'Piedra') {
-      return 'Gana ' + this.player1.name
+      return chalk[this.player1.color]('Gana ' + this.player1.name)
     }
     if (this.player1.action == 'Tijera' && this.player2.action == 'Papel') {
-      return 'Gana ' + this.player1.name
+      return chalk[this.player1.color]('Gana ' + this.player1.name)
     }
-    return 'Gana ' + this.player2.name
+    return chalk[this.player2.color]('Gana ' + this.player2.name)
   }
 }
